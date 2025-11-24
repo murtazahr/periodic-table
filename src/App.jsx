@@ -1,22 +1,10 @@
-import { useState } from 'react'
+import HeatmapTable from './HeatmapTable'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Vision Paper Table</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-        </div>
-        <p>
-          Edit <code>src/App.jsx</code> to get started.
-        </p>
-      </header>
+      <HeatmapTable />
     </div>
   )
 }

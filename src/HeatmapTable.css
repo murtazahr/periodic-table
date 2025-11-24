@@ -1,0 +1,320 @@
+.heatmap-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  min-height: 100vh;
+  color: #e0e0e0;
+}
+
+/* Header Section */
+.header-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  border-bottom: 2px solid rgba(100, 200, 255, 0.2);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #60d5fa 0%, #a0f0b0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #a0a0b0;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Metric Selector */
+.metric-selector {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.metric-selector label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #b0b0c0;
+}
+
+.metric-dropdown {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: 2px solid rgba(100, 200, 255, 0.3);
+  border-radius: 8px;
+  background-color: #1e1e2e;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  min-width: 280px;
+  font-weight: 500;
+}
+
+.metric-dropdown:hover {
+  border-color: rgba(100, 200, 255, 0.6);
+  background-color: #252535;
+}
+
+.metric-dropdown:focus {
+  border-color: #60d5fa;
+  box-shadow: 0 0 0 3px rgba(96, 213, 250, 0.1);
+}
+
+.metric-dropdown option {
+  background-color: #1e1e2e;
+  color: #e0e0e0;
+  padding: 0.5rem;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+}
+
+/* Heatmap Table */
+.heatmap-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #16161e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Corner Cell */
+.corner-cell {
+  background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+  color: #909090;
+  font-weight: 600;
+  padding: 1.2rem;
+  text-align: center;
+  border-right: 2px solid rgba(100, 200, 255, 0.2);
+  border-bottom: 2px solid rgba(100, 200, 255, 0.2);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+
+/* Tier Headers */
+.tier-header {
+  background: linear-gradient(135deg, #1e1e3e 0%, #2a2a4e 100%);
+  padding: 1.2rem;
+  text-align: center;
+  border-bottom: 2px solid rgba(100, 200, 255, 0.2);
+  font-weight: 600;
+  min-width: 150px;
+}
+
+.tier-id {
+  font-size: 1.1rem;
+  color: #60d5fa;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.tier-name {
+  font-size: 0.9rem;
+  color: #a0a0b0;
+  font-weight: 400;
+}
+
+/* Level Headers */
+.level-header {
+  background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+  padding: 1rem 1.2rem;
+  text-align: left;
+  border-right: 2px solid rgba(100, 200, 255, 0.2);
+  font-weight: 600;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  min-width: 280px;
+}
+
+.level-id {
+  font-size: 1rem;
+  color: #a0f0b0;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.level-name {
+  font-size: 0.85rem;
+  color: #909090;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+/* Data Cells */
+.data-cell {
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  min-width: 120px;
+  height: 80px;
+}
+
+.data-cell:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(96, 213, 250, 0.4);
+  z-index: 3;
+  border: 2px solid rgba(96, 213, 250, 0.7);
+  filter: brightness(1.15);
+}
+
+/* Legend */
+.legend {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #1e1e2e;
+  border-radius: 8px;
+  border: 1px solid rgba(100, 200, 255, 0.2);
+}
+
+.legend-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #b0b0c0;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.legend-gradient {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #909090;
+  font-weight: 500;
+}
+
+.gradient-bar {
+  height: 30px;
+  background: linear-gradient(
+    to right,
+    rgb(15, 25, 60),
+    rgb(35, 60, 100),
+    rgb(50, 120, 130),
+    rgb(80, 170, 160),
+    rgb(155, 215, 150)
+  );
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(100, 200, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .heatmap-container {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .tier-header,
+  .level-header,
+  .data-cell {
+    padding: 1rem;
+  }
+
+  .data-cell {
+    min-width: 100px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heatmap-container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .metric-selector {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .metric-dropdown {
+    min-width: 100%;
+  }
+
+  .tier-header,
+  .level-header,
+  .data-cell {
+    padding: 0.75rem;
+  }
+
+  .data-cell {
+    min-width: 80px;
+    height: 60px;
+  }
+
+  .level-header {
+    min-width: 200px;
+  }
+
+  .tier-id,
+  .level-id {
+    font-size: 0.9rem;
+  }
+
+  .tier-name,
+  .level-name {
+    font-size: 0.75rem;
+  }
+}
+
+/* Scrollbar Styling for Dark Mode */
+.table-wrapper::-webkit-scrollbar {
+  height: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #1a1a2e;
+  border-radius: 5px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(100, 200, 255, 0.3);
+  border-radius: 5px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 200, 255, 0.5);
+}
