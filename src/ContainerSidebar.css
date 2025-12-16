@@ -1,0 +1,222 @@
+.container-sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16161e 100%);
+    border-right: 2px solid rgba(100, 200, 255, 0.2);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    color: #e0e0e0;
+    background: linear-gradient(135deg, #60d5fa 0%, #a0f0b0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.add-container-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(100, 200, 255, 0.2);
+}
+
+.container-name-input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    border: 2px solid rgba(100, 200, 255, 0.3);
+    border-radius: 6px;
+    background-color: #1e1e2e;
+    color: #e0e0e0;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.container-name-input:focus {
+    border-color: #60d5fa;
+}
+
+.container-name-input::placeholder {
+    color: #606070;
+}
+
+.add-container-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #3a7ca5 0%, #2c5f7c 100%);
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-container-btn:hover {
+    background: linear-gradient(135deg, #4a8cb5 0%, #3c6f8c 100%);
+    transform: translateY(-1px);
+}
+
+.add-container-btn:active {
+    transform: translateY(0);
+}
+
+.container-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.empty-message {
+    color: #606070;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 1rem;
+}
+
+.container-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    background-color: #1e1e2e;
+    border: 2px solid rgba(100, 200, 255, 0.2);
+    border-radius: 8px;
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+
+.container-item:hover {
+    border-color: rgba(100, 200, 255, 0.5);
+    background-color: #252535;
+}
+
+.container-item:active {
+    cursor: grabbing;
+}
+
+.container-item.placed {
+    border-color: rgba(160, 240, 176, 0.4);
+    background-color: rgba(160, 240, 176, 0.1);
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    color: #606070;
+    transition: color 0.2s ease;
+}
+
+.container-item:hover .drag-handle {
+    color: #60d5fa;
+}
+
+.drag-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.container-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.container-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #e0e0e0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.remove-container-btn {
+    padding: 0.2rem 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: #606070;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.remove-container-btn:hover {
+    background-color: rgba(255, 100, 100, 0.2);
+    color: #ff6b6b;
+}
+
+.sidebar-help {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(100, 200, 255, 0.2);
+}
+
+.sidebar-help p {
+    font-size: 0.8rem;
+    color: #606070;
+    margin: 0;
+    text-align: center;
+}
+
+/* Scrollbar styling */
+.container-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.container-sidebar::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+
+.container-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(100, 200, 255, 0.3);
+    border-radius: 3px;
+}
+
+.container-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 200, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .container-sidebar {
+        width: 240px;
+        min-width: 240px;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .container-sidebar {
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        max-height: 250px;
+        border-right: none;
+        border-bottom: 2px solid rgba(100, 200, 255, 0.2);
+    }
+
+    .container-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .container-item {
+        flex: 0 0 auto;
+    }
+}

@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import './HeatmapTable.css';
+import ContainerSidebar from './ContainerSidebar';
+
+const STORAGE_KEY = 'heatmap-containers';
 
 const HeatmapTable = () => {
     const [selectedMetric, setSelectedMetric] = useState('Latency');
     const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, content: '' });
+    const [containers, setContainers] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : [];
+    });
     const canvasRef = useRef(null);
+    const dataAreaRef = useRef(null);
 
     // Grid dimensions
     const CELL_WIDTH = 150;
@@ -252,10 +260,70 @@ const HeatmapTable = () => {
         ctx.putImageData(imageData, 0, 0);
     }, [selectedMetric, currentData]);
 
+    // Save containers to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(containers));
+    }, [containers]);
+
+    // Container management handlers
+    const handleAddContainer = (container) => {
+        setContainers(prev => [...prev, container]);
+    };
+
+    const handleRemoveContainer = (id) => {
+        setContainers(prev => prev.filter(c => c.id !== id));
+    };
+
+    // Drop zone handlers
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const containerId = e.dataTransfer.getData('containerId');
+        if (!containerId || !dataAreaRef.current) return;
+
+        const rect = dataAreaRef.current.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+
+        // Clamp to 0-1 range
+        const clampedX = Math.max(0, Math.min(1, x));
+        const clampedY = Math.max(0, Math.min(1, y));
+
+        setContainers(prev =>
+            prev.map(c =>
+                c.id === containerId
+                    ? { ...c, x: clampedX, y: clampedY }
+                    : c
+            )
+        );
+    };
+
+    // Calculate container value and color based on position and selected metric
+    const getContainerValue = (container) => {
+        if (container.x === null || container.y === null) return null;
+
+        const metricData = metricsData[selectedMetric];
+        if (!metricData) return null;
+
+        const gridX = container.x * (COLS - 1);
+        const gridY = container.y * (ROWS - 1);
+        return bilinearInterpolate(metricData, gridX, gridY);
+    };
+
     return (
-        <div className="heatmap-container">
-            <div className="header-section">
-                <h1 className="title">The Hitchhiker's Guide to Computing</h1>
+        <div className="heatmap-layout">
+            <ContainerSidebar
+                containers={containers}
+                onAddContainer={handleAddContainer}
+                onRemoveContainer={handleRemoveContainer}
+            />
+            <div className="heatmap-container">
+                <div className="header-section">
+                    <h1 className="title">The Hitchhiker's Guide to Computing</h1>
 
                 <div className="metric-selector">
                     <label htmlFor="metric-dropdown">Select Metric:</label>
@@ -301,8 +369,11 @@ const HeatmapTable = () => {
                             {rowIndex === 0 && (
                                 <div
                                     key="data-area"
+                                    ref={dataAreaRef}
                                     className="data-area"
                                     style={{ gridColumn: '2 / -1', gridRow: `2 / ${ROWS + 2}` }}
+                                    onDragOver={handleDragOver}
+                                    onDrop={handleDrop}
                                 >
                                     <canvas ref={canvasRef} className="gradient-canvas" />
                                     <div className="data-grid-overlay">
@@ -327,6 +398,36 @@ const HeatmapTable = () => {
                                             ))
                                         ))}
                                     </div>
+                                    {/* Placed containers */}
+                                    {containers
+                                        .filter(c => c.x !== null && c.y !== null)
+                                        .map(container => {
+                                            const value = getContainerValue(container);
+                                            return (
+                                                <div
+                                                    key={container.id}
+                                                    className="placed-container"
+                                                    style={{
+                                                        left: `${container.x * 100}%`,
+                                                        top: `${container.y * 100}%`
+                                                    }}
+                                                    draggable="true"
+                                                    onDragStart={(e) => {
+                                                        e.dataTransfer.setData('containerId', container.id);
+                                                        e.dataTransfer.effectAllowed = 'move';
+                                                    }}
+                                                >
+                                                    <span className="placed-container-name">{container.name}</span>
+                                                    <div className="container-gradient-bar">
+                                                        <div
+                                                            className="container-gradient-indicator"
+                                                            style={{ left: `${value}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                    }
                                 </div>
                             )}
                         </>
@@ -361,6 +462,7 @@ const HeatmapTable = () => {
                     <div className="tooltip-location">{tooltip.content}</div>
                 </div>
             )}
+            </div>
         </div>
     );
 };
