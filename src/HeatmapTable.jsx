@@ -18,7 +18,7 @@ const HeatmapTable = () => {
     // Grid dimensions
     const CELL_WIDTH = 150;
     const CELL_HEIGHT = 60;
-    const COLS = 4;
+    const COLS = 5;
     const ROWS = 7;
 
     // Define tiers and abstraction levels
@@ -26,7 +26,8 @@ const HeatmapTable = () => {
         { id: 'T1', name: 'Devices' },
         { id: 'T2', name: 'Edge' },
         { id: 'T3', name: 'Fog' },
-        { id: 'T4', name: 'Cloud' }
+        { id: 'T4', name: 'Cloud' },
+        { id: 'T5', name: 'Sky' }
     ];
 
     const levels = [
@@ -46,168 +47,172 @@ const HeatmapTable = () => {
         // Latency: Higher value = higher latency (worse)
         // Linear gradient: strong increase left→right (tier), gradual increase top→bottom (level)
         // Tier (network distance) is the primary driver; abstraction level adds minor overhead
+        // Sky (multicloud) adds coordination overhead
         'Latency': [
-            [10, 35, 60, 85],   // L1: Hardware
-            [12, 37, 62, 87],   // L2: Infrastructure
-            [14, 39, 64, 89],   // L3: Platform
-            [16, 41, 66, 91],   // L4: Runtime
-            [18, 43, 68, 93],   // L5: Programming Models
-            [20, 45, 70, 95],   // L6: Application
-            [22, 47, 72, 97]    // L7: Agents
+            [10, 35, 60, 85, 97],   // L1: Hardware
+            [12, 37, 62, 87, 99],   // L2: Infrastructure
+            [14, 39, 64, 89, 99],   // L3: Platform
+            [16, 41, 66, 91, 99],   // L4: Runtime
+            [18, 43, 68, 93, 99],   // L5: Programming Models
+            [20, 45, 70, 95, 99],   // L6: Application
+            [22, 47, 72, 97, 99]    // L7: Agents
         ],
         // Throughput: Higher value = better throughput
         // Linear gradient: strong increase left→right (cloud capacity), gradual decrease top→bottom (abstraction overhead)
+        // Sky can aggregate throughput from multiple clouds
         'Throughput': [
-            [20, 45, 70, 95],   // L1: Hardware - highest throughput
-            [18, 43, 68, 93],   // L2: Infrastructure
-            [16, 41, 66, 91],   // L3: Platform
-            [14, 39, 64, 89],   // L4: Runtime
-            [12, 37, 62, 87],   // L5: Programming Models
-            [10, 35, 60, 85],   // L6: Application
-            [8, 33, 58, 83]     // L7: Agents - lowest throughput
+            [20, 45, 70, 95, 99],   // L1: Hardware - highest throughput
+            [18, 43, 68, 93, 97],   // L2: Infrastructure
+            [16, 41, 66, 91, 95],   // L3: Platform
+            [14, 39, 64, 89, 93],   // L4: Runtime
+            [12, 37, 62, 87, 91],   // L5: Programming Models
+            [10, 35, 60, 85, 89],   // L6: Application
+            [8, 33, 58, 83, 87]     // L7: Agents - lowest throughput
         ],
         // Availability: Higher value = better availability
         // Linear gradient: strong increase left→right (cloud redundancy), gradual increase top→bottom
-        // End user perspective: higher layers add resilience mechanisms (auto-healing, retries, failover)
+        // Sky provides ultimate redundancy across providers
         'Availability': [
-            [15, 38, 62, 85],   // L1: Hardware - single point of failure
-            [17, 40, 64, 87],   // L2: Infrastructure
-            [19, 42, 66, 89],   // L3: Platform
-            [21, 44, 68, 91],   // L4: Runtime
-            [23, 46, 70, 93],   // L5: Programming Models
-            [25, 48, 72, 95],   // L6: Application
-            [27, 50, 74, 97]    // L7: Agents - benefits from all resilience layers
+            [15, 38, 62, 85, 97],   // L1: Hardware - single point of failure
+            [17, 40, 64, 87, 99],   // L2: Infrastructure
+            [19, 42, 66, 89, 99],   // L3: Platform
+            [21, 44, 68, 91, 99],   // L4: Runtime
+            [23, 46, 70, 93, 99],   // L5: Programming Models
+            [25, 48, 72, 95, 99],   // L6: Application
+            [27, 50, 74, 97, 99]    // L7: Agents - benefits from all resilience layers
         ],
         // Infrastructure Cost: Higher value = higher cost
         // Linear gradient: strong decrease left→right (cloud=no upfront hardware), gradual increase top→bottom
-        // Each layer builds on previous, requiring more infrastructure underneath
+        // Sky increases cost (multiple providers)
         'Infrastructure Cost': [
-            [85, 62, 38, 15],   // L1: Hardware only
-            [87, 64, 40, 17],   // L2: + infrastructure software
-            [89, 66, 42, 19],   // L3: + platform services
-            [91, 68, 44, 21],   // L4: + runtime/containers
-            [93, 70, 46, 23],   // L5: + frameworks
-            [95, 72, 48, 25],   // L6: + application layer
-            [97, 74, 50, 27]    // L7: + agent orchestration - most layers
+            [85, 62, 38, 15, 20],   // L1: Hardware only
+            [87, 64, 40, 17, 22],   // L2: + infrastructure software
+            [89, 66, 42, 19, 24],   // L3: + platform services
+            [91, 68, 44, 21, 26],   // L4: + runtime/containers
+            [93, 70, 46, 23, 28],   // L5: + frameworks
+            [95, 72, 48, 25, 30],   // L6: + application layer
+            [97, 74, 50, 27, 32]    // L7: + agent orchestration - most layers
         ],
         // Operational Cost: Higher value = higher cost
         // Linear gradient: strong increase left→right (cloud=pay-per-use fees), gradual increase top→bottom
-        // Each layer adds operational overhead (monitoring, maintenance, updates)
+        // Sky adds complexity (managing multiple providers)
         'Operational Cost': [
-            [15, 38, 62, 85],   // L1: Minimal ops overhead
-            [17, 40, 64, 87],   // L2: Infrastructure ops
-            [19, 42, 66, 89],   // L3: Platform management
-            [21, 44, 68, 91],   // L4: Container orchestration
-            [23, 46, 70, 93],   // L5: Framework updates
-            [25, 48, 72, 95],   // L6: Application maintenance
-            [27, 50, 74, 97]    // L7: Agent ops + API costs - most overhead
+            [15, 38, 62, 85, 97],   // L1: Minimal ops overhead
+            [17, 40, 64, 87, 99],   // L2: Infrastructure ops
+            [19, 42, 66, 89, 99],   // L3: Platform management
+            [21, 44, 68, 91, 99],   // L4: Container orchestration
+            [23, 46, 70, 93, 99],   // L5: Framework updates
+            [25, 48, 72, 95, 99],   // L6: Application maintenance
+            [27, 50, 74, 97, 99]    // L7: Agent ops + API costs - most overhead
         ],
         // Elasticity: Higher value = better elasticity
         // Linear gradient: strong increase left→right (cloud scaling), moderate increase top→bottom
-        // Each layer adds elasticity mechanisms (auto-scaling, serverless, orchestration)
+        // Sky provides ultimate elasticity across providers
         'Elasticity': [
-            [5, 25, 45, 65],    // L1: Hardware - almost none
-            [9, 29, 49, 69],    // L2: Infrastructure
-            [13, 33, 53, 73],   // L3: Platform
-            [17, 37, 57, 77],   // L4: Runtime
-            [21, 41, 61, 81],   // L5: Programming Models
-            [25, 45, 65, 85],   // L6: Application
-            [29, 49, 69, 89]    // L7: Agents - benefits from all scaling layers
+            [5, 25, 45, 65, 80],    // L1: Hardware - almost none
+            [9, 29, 49, 69, 84],    // L2: Infrastructure
+            [13, 33, 53, 73, 88],   // L3: Platform
+            [17, 37, 57, 77, 92],   // L4: Runtime
+            [21, 41, 61, 81, 96],   // L5: Programming Models
+            [25, 45, 65, 85, 99],   // L6: Application
+            [29, 49, 69, 89, 99]    // L7: Agents - benefits from all scaling layers
         ],
         // Reliability: Higher value = better reliability
         // Linear gradient: constant left→right (tier doesn't strongly affect reliability)
         // Gradual decrease top→bottom (more layers = more failure points), considerable dip at L7
         'Reliability': [
-            [90, 90, 90, 90],   // L1: Hardware - simple, predictable
-            [85, 85, 85, 85],   // L2: Infrastructure
-            [80, 80, 80, 80],   // L3: Platform
-            [75, 75, 75, 75],   // L4: Runtime
-            [70, 70, 70, 70],   // L5: Programming Models
-            [65, 65, 65, 65],   // L6: Application
-            [45, 45, 45, 45]    // L7: Agents - considerable dip (emerging, unpredictable)
+            [90, 90, 90, 90, 90],   // L1: Hardware - simple, predictable
+            [85, 85, 85, 85, 85],   // L2: Infrastructure
+            [80, 80, 80, 80, 80],   // L3: Platform
+            [75, 75, 75, 75, 75],   // L4: Runtime
+            [70, 70, 70, 70, 70],   // L5: Programming Models
+            [65, 65, 65, 65, 65],   // L6: Application
+            [45, 45, 45, 45, 45]    // L7: Agents - considerable dip (emerging, unpredictable)
         ],
         // Mobility: Higher value = better mobility
         // Linear gradient: strong decrease left→right (devices mobile, cloud fixed)
         // Constant top→bottom (abstraction level doesn't affect physical mobility)
+        // Sky is even less mobile (tied to multiple fixed providers)
         'Mobility': [
-            [95, 70, 45, 20],   // L1: Hardware
-            [95, 70, 45, 20],   // L2: Infrastructure
-            [95, 70, 45, 20],   // L3: Platform
-            [95, 70, 45, 20],   // L4: Runtime
-            [95, 70, 45, 20],   // L5: Programming Models
-            [95, 70, 45, 20],   // L6: Application
-            [95, 70, 45, 20]    // L7: Agents
+            [95, 70, 45, 20, 10],   // L1: Hardware
+            [95, 70, 45, 20, 10],   // L2: Infrastructure
+            [95, 70, 45, 20, 10],   // L3: Platform
+            [95, 70, 45, 20, 10],   // L4: Runtime
+            [95, 70, 45, 20, 10],   // L5: Programming Models
+            [95, 70, 45, 20, 10],   // L6: Application
+            [95, 70, 45, 20, 10]    // L7: Agents
         ],
         // Distributedness: Higher value = more distributed
-        // Linear gradient: strong increase left→right (cloud is distributed), gradual increase top→bottom
-        // Higher abstraction enables more distribution patterns
+        // Linear gradient: decrease left→right (devices/edge most distributed, cloud centralized)
+        // Gradual increase top→bottom
         'Distributedness': [
-            [10, 32, 54, 75],   // L1: Hardware
-            [12, 34, 56, 77],   // L2: Infrastructure
-            [14, 36, 58, 79],   // L3: Platform
-            [16, 38, 60, 81],   // L4: Runtime
-            [18, 40, 62, 83],   // L5: Programming Models
-            [20, 42, 64, 85],   // L6: Application
-            [22, 44, 66, 87]    // L7: Agents
+            [90, 75, 55, 35, 20],   // L1: Hardware
+            [92, 77, 57, 37, 22],   // L2: Infrastructure
+            [94, 79, 59, 39, 24],   // L3: Platform
+            [96, 81, 61, 41, 26],   // L4: Runtime
+            [98, 83, 63, 43, 28],   // L5: Programming Models
+            [99, 85, 65, 45, 30],   // L6: Application
+            [99, 87, 67, 47, 32]    // L7: Agents
         ],
         // Democratization: Higher value = easier to use
         // Primarily vertical - strong increase with abstraction
-        // L7 peaks dramatically; L1 very low across all tiers
+        // Sky adds complexity (multicloud management)
         'Democratization (Ease of use & Programming)': [
-            [5, 8, 12, 18],     // L1: Hardware - very difficult
-            [12, 18, 25, 32],   // L2: Infrastructure
-            [25, 35, 45, 55],   // L3: Platform
-            [38, 48, 58, 68],   // L4: Runtime
-            [55, 65, 75, 82],   // L5: Programming Models
-            [75, 82, 88, 92],   // L6: Application - low-code
-            [92, 95, 97, 99]    // L7: Agents - natural language peak
+            [5, 8, 12, 18, 12],     // L1: Hardware - very difficult
+            [12, 18, 25, 32, 26],   // L2: Infrastructure
+            [25, 35, 45, 55, 48],   // L3: Platform
+            [38, 48, 58, 68, 62],   // L4: Runtime
+            [55, 65, 75, 82, 78],   // L5: Programming Models
+            [75, 82, 88, 92, 88],   // L6: Application - low-code
+            [92, 95, 97, 99, 95]    // L7: Agents - natural language peak
         ],
         // Governance: Higher value = better governance
         // Peak at L3-L4 cloud; L7 has governance challenges
+        // Sky is harder to govern (multiple providers, policies)
         'Governance': [
-            [22, 35, 50, 72],   // L1: Hardware
-            [40, 55, 72, 88],   // L2: Infrastructure
-            [55, 72, 88, 98],   // L3: Platform - peak
-            [62, 78, 92, 99],   // L4: Runtime - peak
-            [48, 65, 80, 92],   // L5: Programming Models
-            [38, 52, 68, 82],   // L6: Application
-            [25, 38, 55, 70]    // L7: Agents - governance gaps
+            [22, 35, 50, 72, 55],   // L1: Hardware
+            [40, 55, 72, 88, 70],   // L2: Infrastructure
+            [55, 72, 88, 98, 82],   // L3: Platform - peak
+            [62, 78, 92, 99, 85],   // L4: Runtime - peak
+            [48, 65, 80, 92, 75],   // L5: Programming Models
+            [38, 52, 68, 82, 65],   // L6: Application
+            [25, 38, 55, 70, 52]    // L7: Agents - governance gaps
         ],
         // AI-Friendliness: Higher value = more AI-friendly
         // Linear gradient: increase left→right (cloud has AI infrastructure), increase top→bottom
-        // Higher abstraction = more AI-friendly (L7 agents are purpose-built for AI)
+        // Sky can leverage best AI from each provider
         'AI-Friendliness': [
-            [5, 22, 38, 55],    // L1: Hardware
-            [12, 29, 45, 62],   // L2: Infrastructure
-            [19, 36, 52, 69],   // L3: Platform
-            [26, 43, 59, 76],   // L4: Runtime
-            [33, 50, 66, 83],   // L5: Programming Models
-            [40, 57, 73, 90],   // L6: Application
-            [47, 64, 80, 97]    // L7: Agents - most AI-friendly
+            [5, 22, 38, 55, 65],    // L1: Hardware
+            [12, 29, 45, 62, 72],   // L2: Infrastructure
+            [19, 36, 52, 69, 79],   // L3: Platform
+            [26, 43, 59, 76, 86],   // L4: Runtime
+            [33, 50, 66, 83, 93],   // L5: Programming Models
+            [40, 57, 73, 90, 99],   // L6: Application
+            [47, 64, 80, 97, 99]    // L7: Agents - most AI-friendly
         ],
         // Sustainability: Higher value = more sustainable
         // Linear gradient: constant left→right, gradual decrease top→bottom
         // More layers = more compute/resources = less sustainable
         'Sustainability': [
-            [80, 80, 80, 80],   // L1: Hardware - simple, efficient
-            [73, 73, 73, 73],   // L2: Infrastructure
-            [66, 66, 66, 66],   // L3: Platform
-            [59, 59, 59, 59],   // L4: Runtime
-            [52, 52, 52, 52],   // L5: Programming Models
-            [45, 45, 45, 45],   // L6: Application
-            [38, 38, 38, 38]    // L7: Agents - AI workloads intensive
+            [80, 80, 80, 80, 80],   // L1: Hardware - simple, efficient
+            [73, 73, 73, 73, 73],   // L2: Infrastructure
+            [66, 66, 66, 66, 66],   // L3: Platform
+            [59, 59, 59, 59, 59],   // L4: Runtime
+            [52, 52, 52, 52, 52],   // L5: Programming Models
+            [45, 45, 45, 45, 45],   // L6: Application
+            [38, 38, 38, 38, 38]    // L7: Agents - AI workloads intensive
         ],
         // Security & Trustworthiness: Higher value = better security
         // Linear gradient: constant left→right, gradual decrease top→bottom
         // More layers = more attack surface = less secure
         'Security & Trustworthiness': [
-            [90, 90, 90, 90],   // L1: Hardware - physical control, simple
-            [82, 82, 82, 82],   // L2: Infrastructure
-            [74, 74, 74, 74],   // L3: Platform
-            [66, 66, 66, 66],   // L4: Runtime
-            [58, 58, 58, 58],   // L5: Programming Models
-            [50, 50, 50, 50],   // L6: Application
-            [42, 42, 42, 42]    // L7: Agents - emerging risks (prompt injection)
+            [90, 90, 90, 90, 90],   // L1: Hardware - physical control, simple
+            [82, 82, 82, 82, 82],   // L2: Infrastructure
+            [74, 74, 74, 74, 74],   // L3: Platform
+            [66, 66, 66, 66, 66],   // L4: Runtime
+            [58, 58, 58, 58, 58],   // L5: Programming Models
+            [50, 50, 50, 50, 50],   // L6: Application
+            [42, 42, 42, 42, 42]    // L7: Agents - emerging risks (prompt injection)
         ]
     };
 
