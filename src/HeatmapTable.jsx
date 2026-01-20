@@ -153,6 +153,18 @@ const HeatmapTable = () => {
             [92, 77, 57, 37, 22],   // L2: Infrastructure
             [90, 75, 55, 35, 20]    // L1: Hardware
         ],
+        // Interoperability: Higher value = better interoperability
+        // Linear gradient: increase left→right (cloud has standardized APIs, Sky is multicloud by design)
+        // Moderate increase bottom→top (higher abstractions have more standardized interfaces)
+        'Interoperability': [
+            [35, 52, 70, 88, 99],   // L7: Agents - standard APIs, multicloud agents
+            [32, 49, 67, 85, 99],   // L6: Application - containerized, portable apps
+            [28, 45, 63, 82, 97],   // L5: Programming Models - standard frameworks
+            [24, 41, 59, 78, 94],   // L4: Runtime - container orchestration
+            [20, 37, 55, 74, 90],   // L3: Platform - platform services
+            [16, 33, 51, 70, 86],   // L2: Infrastructure - IaC standards
+            [12, 29, 47, 66, 82]    // L1: Hardware - proprietary protocols
+        ],
         // Democratization: Higher value = easier to use
         // Primarily vertical - strong increase with abstraction (bottom→top)
         // Sky adds complexity (multicloud management)
@@ -216,20 +228,21 @@ const HeatmapTable = () => {
     };
 
     const metricDefinitions = {
-        'Latency': 'Response time delay',
-        'Throughput': 'Data processing capacity',
-        'Availability': 'Uptime and accessibility',
-        'Infrastructure Cost': 'Hardware and setup expenses',
-        'Operational Cost': 'Ongoing running expenses',
-        'Elasticity': 'Ability to scale resources',
-        'Reliability': 'Consistent performance',
-        'Mobility': 'Physical portability',
-        'Distributedness': 'Geographic spread of resources',
-        'Democratization (Ease of use & Programming)': 'Accessibility for developers',
-        'Governance': 'Policy and compliance control',
-        'AI-Native': 'AI/ML integration readiness',
-        'Sustainability': 'Environmental efficiency',
-        'Security & Trustworthiness': 'Protection and trust level'
+        'Latency': 'The network distance to the destination compute resource, reflecting the communication delay between the requester and the execution site.',
+        'Throughput': 'The rate at which a distributed system can process or complete tasks, requests, or data over time.',
+        'Availability': 'The proportion of time a distributed system remains operational and accessible, typically expressed as uptime percentage or "nines" of availability.',
+        'Infrastructure Cost': 'Capital expenditures (CAPEX) including hardware, setup, and deployment costs.',
+        'Operational Cost': 'Operational expenditures (OPEX) including compute, storage, networking, and management overheads.',
+        'Elasticity': 'The ability of a distributed system to dynamically scale resources up or down in response to changing workload demands.',
+        'Reliability': 'The ability of a distributed system to provide correct and dependable services over time, including high availability and tolerance to failures or faults.',
+        'Mobility': 'The capability of a distributed system to support mobile compute resources, such as smartphones or vehicular nodes, while maintaining continuous service.',
+        'Distributedness': 'The extent to which computation, data, and control are spread across multiple, geographically or logically distinct nodes.',
+        'Interoperability': 'The ability of a distributed system to operate across heterogeneous platforms, technologies, and administrative domains.',
+        'Democratization (Ease of use & Programming)': 'The degree to which a distributed system lowers barriers to access, development, and deployment through ease of use, programmability, and accessibility.',
+        'Governance': 'The mechanisms and policies that define how a distributed system is controlled, managed, and regulated, including accountability and compliance.',
+        'AI-Native': 'The extent to which artificial intelligence is fundamentally integrated into the design, operation, and optimization of the distributed system.',
+        'Sustainability': 'The ability of a distributed system to minimize environmental impact and resource consumption while remaining effective over the long term.',
+        'Security & Trustworthiness': 'The ability of a distributed system to protect data, operations, and users against threats while ensuring integrity, confidentiality, and trustworthy behavior.'
     };
 
     const metrics = Object.keys(metricsData);
