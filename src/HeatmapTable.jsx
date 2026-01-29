@@ -5,7 +5,7 @@ import ContainerSidebar from './ContainerSidebar';
 const STORAGE_KEY = 'heatmap-containers';
 
 const HeatmapTable = () => {
-    const [selectedMetric, setSelectedMetric] = useState('Latency');
+    const [selectedMetric, setSelectedMetric] = useState('Responsiveness');
     const [showGridLines, setShowGridLines] = useState(true);
     const [containers, setContainers] = useState(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -43,11 +43,10 @@ const HeatmapTable = () => {
     // Values range from 0-100 for heatmap intensity
     // Rows: L7-L1 (Agents to Hardware - graph style), Cols: T1-T5 (Devices to Sky)
     const metricsData = {
-        // Latency: Higher value = higher latency (worse)
-        // Linear gradient: strong increase left→right (tier), gradual increase bottom→top (level)
-        // Tier (network distance) is the primary driver; abstraction level adds minor overhead
-        // Sky (multicloud) adds coordination overhead
-        'Latency': [
+        // Responsiveness: Higher value = faster response times
+        // Linear gradient: strong decrease left→right (tier), gradual decrease bottom→top (level)
+        // Devices respond fastest; cloud/sky have network delays
+        'Responsiveness': [
             [22, 47, 72, 97, 99],   // L7: Agents
             [20, 45, 70, 95, 99],   // L6: Application
             [18, 43, 68, 93, 99],   // L5: Programming Models
@@ -56,17 +55,17 @@ const HeatmapTable = () => {
             [12, 37, 62, 87, 99],   // L2: Infrastructure
             [10, 35, 60, 85, 97]    // L1: Hardware
         ],
-        // Throughput: Higher value = better throughput
-        // Linear gradient: strong increase left→right (cloud capacity), gradual increase bottom→top (abstraction overhead)
-        // Sky can aggregate throughput from multiple clouds
-        'Throughput': [
-            [8, 33, 58, 83, 87],    // L7: Agents - lowest throughput
-            [10, 35, 60, 85, 89],   // L6: Application
-            [12, 37, 62, 87, 91],   // L5: Programming Models
-            [14, 39, 64, 89, 93],   // L4: Runtime
-            [16, 41, 66, 91, 95],   // L3: Platform
-            [18, 43, 68, 93, 97],   // L2: Infrastructure
-            [20, 45, 70, 95, 99]    // L1: Hardware - highest throughput
+        // Capacity: Higher value = better capacity
+        // Linear gradient: strong increase left→right (cloud capacity), constant across abstraction levels
+        // Sky can aggregate capacity from multiple clouds
+        'Capacity': [
+            [15, 40, 65, 90, 95],   // L7: Agents
+            [15, 40, 65, 90, 95],   // L6: Application
+            [15, 40, 65, 90, 95],   // L5: Programming Models
+            [15, 40, 65, 90, 95],   // L4: Runtime
+            [15, 40, 65, 90, 95],   // L3: Platform
+            [15, 40, 65, 90, 95],   // L2: Infrastructure
+            [15, 40, 65, 90, 95]    // L1: Hardware
         ],
         // Availability: Higher value = better availability
         // Linear gradient: strong increase left→right (cloud redundancy), gradual increase bottom→top
@@ -201,6 +200,18 @@ const HeatmapTable = () => {
             [12, 29, 45, 62, 72],   // L2: Infrastructure
             [5, 22, 38, 55, 65]     // L1: Hardware
         ],
+        // AI-Support: Higher value = better AI workload support
+        // Linear gradient: increase left→right (cloud has GPUs, TPUs, ML services), increase bottom→top
+        // Sky can leverage AI infrastructure from multiple providers
+        'AI-Support': [
+            [42, 59, 76, 93, 99],   // L7: Agents - best AI framework support
+            [38, 55, 72, 89, 97],   // L6: Application
+            [34, 51, 68, 85, 94],   // L5: Programming Models
+            [30, 47, 64, 81, 90],   // L4: Runtime
+            [26, 43, 60, 77, 86],   // L3: Platform
+            [22, 39, 56, 73, 82],   // L2: Infrastructure
+            [18, 35, 52, 69, 78]    // L1: Hardware - raw compute, less AI optimization
+        ],
         // Sustainability: Higher value = more sustainable
         // Linear gradient: constant left→right, gradual increase bottom→top
         // More layers = more compute/resources = less sustainable
@@ -228,21 +239,22 @@ const HeatmapTable = () => {
     };
 
     const metricDefinitions = {
-        'Latency': 'The network distance to the destination compute resource, reflecting the communication delay between the requester and the execution site.',
-        'Throughput': 'The rate at which a distributed system can process or complete tasks, requests, or data over time.',
+        'Responsiveness': 'How quickly a solution processes and returns responses to user/client requests.',
+        'Capacity': 'How much computational power a solution provides in terms of processing, memory, storage, and network.',
         'Availability': 'The proportion of time a distributed system remains operational and accessible, typically expressed as uptime percentage or "nines" of availability.',
-        'Infrastructure Cost': 'Capital expenditures (CAPEX) including hardware, setup, and deployment costs.',
-        'Operational Cost': 'Operational expenditures (OPEX) including compute, storage, networking, and management overheads.',
-        'Elasticity': 'The ability of a distributed system to dynamically scale resources up or down in response to changing workload demands.',
-        'Reliability': 'The ability of a distributed system to provide correct and dependable services over time, including high availability and tolerance to failures or faults.',
-        'Mobility': 'The capability of a distributed system to support mobile compute resources, such as smartphones or vehicular nodes, while maintaining continuous service.',
+        'Infrastructure Cost': 'The total software & hardware expenses to develop and establish a solution.',
+        'Operational Cost': 'The total economic expense to operate and run a solution.',
+        'Elasticity': 'The ability of a solution to adapt its resource allocation to load changes to maintain performance objectives.',
+        'Reliability': 'The ability of a solution to provide correct and dependable services over time.',
+        'Mobility': 'The ability of a solution to work on mobile compute resources (e.g., smartphones or vehicular nodes) while maintaining uninterrupted services.',
         'Distributedness': 'The extent to which computation, data, and control are spread across multiple, geographically or logically distinct nodes.',
-        'Interoperability': 'The ability of a distributed system to operate across heterogeneous platforms, technologies, and administrative domains.',
-        'Democratization (Ease of use & Programming)': 'The degree to which a distributed system lowers barriers to access, development, and deployment through ease of use, programmability, and accessibility.',
-        'Governance': 'The mechanisms and policies that define how a distributed system is controlled, managed, and regulated, including accountability and compliance.',
-        'AI-Native': 'The extent to which artificial intelligence is fundamentally integrated into the design, operation, and optimization of the distributed system.',
-        'Sustainability': 'The ability of a distributed system to minimize environmental impact and resource consumption while remaining effective over the long term.',
-        'Security & Trustworthiness': 'The ability of a distributed system to protect data, operations, and users against threats while ensuring integrity, confidentiality, and trustworthy behavior.'
+        'Interoperability': 'The ability of a solution to operate across platforms, technologies, and administrative domains.',
+        'Democratization (Ease of use & Programming)': 'The degree to which a solution lowers barriers to access, development, and deployment through ease of use, programmability, and accessibility.',
+        'Governance': 'The mechanisms and policies that define how a solution is controlled, managed, and regulated, including accountability and compliance.',
+        'AI-Native': 'AI-optimized solutions where AI is fundamentally integrated into the system\'s design and operation.',
+        'AI-Support': 'The solution is built to efficiently support AI workloads.',
+        'Sustainability': 'The ability of a solution to minimize environmental impact while remaining effective over time.',
+        'Security & Trustworthiness': 'The ability of a solution to protect data, operations, and users against threats while ensuring integrity, confidentiality, and trustworthy behavior.'
     };
 
     const metrics = Object.keys(metricsData);
