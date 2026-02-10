@@ -43,17 +43,17 @@ const HeatmapTable = () => {
     // Values range from 0-100 for heatmap intensity
     // Rows: L7-L1 (Agents to Hardware - graph style), Cols: T1-T5 (Devices to Sky)
     const metricsData = {
-        // Responsiveness: Higher value = faster response times
-        // Linear gradient: strong decrease left→right (tier), gradual decrease bottom→top (level)
-        // Devices respond fastest; cloud/sky have network delays
+        // Responsiveness: Higher value = more responsive (better, lower latency)
+        // Linear gradient: decreases left→right (cloud/sky less responsive due to network latency), decreases bottom→top (higher abstractions add overhead)
+        // Responsiveness decreases with both abstraction and tier (latency increases)
         'Responsiveness': [
-            [22, 47, 72, 97, 99],   // L7: Agents
-            [20, 45, 70, 95, 99],   // L6: Application
-            [18, 43, 68, 93, 99],   // L5: Programming Models
-            [16, 41, 66, 91, 99],   // L4: Runtime
-            [14, 39, 64, 89, 99],   // L3: Platform
-            [12, 37, 62, 87, 99],   // L2: Infrastructure
-            [10, 35, 60, 85, 97]    // L1: Hardware
+            [25, 20, 15, 10, 5],    // L7: Agents - least responsive (most layers)
+            [35, 30, 25, 20, 10],   // L6: Application
+            [45, 40, 35, 30, 15],   // L5: Programming Models
+            [55, 50, 45, 40, 20],   // L4: Runtime
+            [65, 60, 55, 50, 25],   // L3: Platform
+            [75, 70, 65, 60, 30],   // L2: Infrastructure
+            [85, 80, 75, 70, 35]    // L1: Hardware - most responsive (direct, minimal overhead)
         ],
         // Capacity: Higher value = better capacity
         // Linear gradient: strong increase left→right (cloud capacity), constant across abstraction levels
@@ -92,16 +92,16 @@ const HeatmapTable = () => {
             [85, 62, 38, 15, 20]    // L1: Hardware only
         ],
         // Operational Cost: Higher value = higher cost
-        // Linear gradient: strong increase left→right (cloud=pay-per-use fees), gradual increase bottom→top
-        // Sky adds complexity (managing multiple providers)
+        // Linear gradient: strong increase left→right (cloud=pay-per-use fees), gradual decrease bottom→top
+        // Higher abstractions reduce operational overhead through automation
         'Operational Cost': [
-            [27, 50, 74, 97, 99],   // L7: Agent ops + API costs - most overhead
-            [25, 48, 72, 95, 99],   // L6: Application maintenance
-            [23, 46, 70, 93, 99],   // L5: Framework updates
+            [15, 38, 62, 85, 97],   // L7: Lowest ops cost (highly automated, managed services)
+            [17, 40, 64, 87, 99],   // L6: Application maintenance
+            [19, 42, 66, 89, 99],   // L5: Framework updates
             [21, 44, 68, 91, 99],   // L4: Container orchestration
-            [19, 42, 66, 89, 99],   // L3: Platform management
-            [17, 40, 64, 87, 99],   // L2: Infrastructure ops
-            [15, 38, 62, 85, 97]    // L1: Minimal ops overhead
+            [23, 46, 70, 93, 99],   // L3: Platform management
+            [25, 48, 72, 95, 99],   // L2: Infrastructure ops
+            [27, 50, 74, 97, 99]    // L1: Highest ops cost (manual management, no automation)
         ],
         // Elasticity: Higher value = better elasticity
         // Linear gradient: strong increase left→right (cloud scaling), moderate increase bottom→top
@@ -116,16 +116,16 @@ const HeatmapTable = () => {
             [5, 25, 45, 65, 80]     // L1: Hardware - almost none
         ],
         // Reliability: Higher value = better reliability
-        // Linear gradient: constant left→right (tier doesn't strongly affect reliability)
-        // Gradual increase bottom→top (more layers = more failure points), considerable dip at L7
+        // Linear gradient: increases left→right (cloud/sky have redundancy), decreases bottom→top (more layers = more failure points)
+        // Cloud tiers provide better fault tolerance and redundancy
         'Reliability': [
-            [45, 45, 45, 45, 45],   // L7: Agents - considerable dip (emerging, unpredictable)
-            [65, 65, 65, 65, 65],   // L6: Application
-            [70, 70, 70, 70, 70],   // L5: Programming Models
-            [75, 75, 75, 75, 75],   // L4: Runtime
-            [80, 80, 80, 80, 80],   // L3: Platform
-            [85, 85, 85, 85, 85],   // L2: Infrastructure
-            [90, 90, 90, 90, 90]    // L1: Hardware - simple, predictable
+            [30, 40, 50, 60, 70],   // L7: Agents - emerging tech, but benefits from tier redundancy
+            [50, 60, 70, 80, 85],   // L6: Application
+            [55, 65, 75, 85, 90],   // L5: Programming Models
+            [60, 70, 80, 90, 92],   // L4: Runtime
+            [65, 75, 85, 92, 94],   // L3: Platform
+            [70, 80, 87, 94, 96],   // L2: Infrastructure
+            [75, 82, 89, 95, 98]    // L1: Hardware - simple and benefits greatly from cloud redundancy
         ],
         // Mobility: Higher value = better mobility
         // Linear gradient: strong decrease left→right (devices mobile, cloud fixed)
@@ -141,16 +141,16 @@ const HeatmapTable = () => {
             [95, 70, 45, 20, 10]    // L1: Hardware
         ],
         // Distributedness: Higher value = more distributed
-        // Linear gradient: decrease left→right (devices/edge most distributed, cloud centralized)
-        // Gradual increase bottom→top
+        // Linear gradient: decrease left→right (devices/edge most distributed, cloud centralized), with notable uptick at Sky
+        // Gradual increase bottom→top; Sky (multi-cloud) more distributed than single Cloud
         'Distributedness': [
-            [99, 87, 67, 47, 32],   // L7: Agents
-            [99, 85, 65, 45, 30],   // L6: Application
-            [98, 83, 63, 43, 28],   // L5: Programming Models
-            [96, 81, 61, 41, 26],   // L4: Runtime
-            [94, 79, 59, 39, 24],   // L3: Platform
-            [92, 77, 57, 37, 22],   // L2: Infrastructure
-            [90, 75, 55, 35, 20]    // L1: Hardware
+            [99, 87, 67, 47, 57],   // L7: Agents - Sky uptick (multi-cloud distribution)
+            [99, 85, 65, 45, 55],   // L6: Application
+            [98, 83, 63, 43, 53],   // L5: Programming Models
+            [96, 81, 61, 41, 51],   // L4: Runtime
+            [94, 79, 59, 39, 49],   // L3: Platform
+            [92, 77, 57, 37, 47],   // L2: Infrastructure
+            [90, 75, 55, 35, 45]    // L1: Hardware
         ],
         // Interoperability: Higher value = better interoperability
         // Linear gradient: increase left→right (cloud has standardized APIs, Sky is multicloud by design)
