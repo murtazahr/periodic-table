@@ -176,17 +176,17 @@ const HeatmapTable = () => {
             [12, 18, 25, 32, 26],   // L2: Infrastructure
             [5, 8, 12, 18, 12]      // L1: Hardware - very difficult
         ],
-        // Governance: Higher value = better governance
-        // Peak at L3-L4 cloud; L7 has governance challenges
-        // Sky is harder to govern (multiple providers, policies)
-        'Governance': [
-            [25, 38, 55, 70, 52],   // L7: Agents - governance gaps
-            [38, 52, 68, 82, 65],   // L6: Application
-            [48, 65, 80, 92, 75],   // L5: Programming Models
-            [62, 78, 92, 99, 85],   // L4: Runtime - peak
-            [55, 72, 88, 98, 82],   // L3: Platform - peak
-            [40, 55, 72, 88, 70],   // L2: Infrastructure
-            [22, 35, 50, 72, 55]    // L1: Hardware
+        // Controllability: Higher value = more controllable
+        // Linear gradient: decreases left→right (cloud/sky less controllable), decreases bottom→top (higher abstractions reduce direct control)
+        // Controllability decreases with both abstraction and tier
+        'Controllability': [
+            [25, 20, 15, 10,  5],   // L7: Agents - least controllable (most abstracted)
+            [35, 30, 25, 20, 15],   // L6: Application
+            [50, 43, 36, 29, 22],   // L5: Programming Models
+            [60, 53, 46, 39, 32],   // L4: Runtime
+            [70, 63, 56, 49, 42],   // L3: Platform
+            [82, 75, 65, 58, 50],   // L2: Infrastructure
+            [95, 85, 75, 65, 55]    // L1: Hardware - most controllable (direct control)
         ],
         // AI-Native: Higher value = more AI-native
         // Linear gradient: increase left→right (cloud has AI infrastructure), increase bottom→top
@@ -250,7 +250,7 @@ const HeatmapTable = () => {
         'Distributedness': 'The extent to which computation, data, and control are spread across multiple, geographically or logically distinct nodes.',
         'Interoperability': 'The ability of a solution to operate across platforms, technologies, and administrative domains.',
         'Democratization (Ease of use & Programming)': 'The degree to which a solution lowers barriers to access, development, and deployment through ease of use, programmability, and accessibility.',
-        'Governance': 'The mechanisms and policies that define how a solution is controlled, managed, and regulated, including accountability and compliance.',
+        'Controllability': 'The degree to which developers or users can directly configure, manage, and influence infrastructure behavior and execution decisions.',
         'AI-Native': 'AI-optimized solutions where AI is fundamentally integrated into the system\'s design and operation.',
         'AI-Support': 'The solution is built to efficiently support AI workloads.',
         'Sustainability': 'The ability of a solution to minimize environmental impact while remaining effective over time.',
