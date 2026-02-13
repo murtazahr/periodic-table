@@ -519,7 +519,7 @@ const HeatmapTable = () => {
             />
             <div className="heatmap-container">
                 <div className="header-section">
-                    <h1 className="title">The Hitchhiker's Guide to Computing</h1>
+                    <h1 className="title">Periodic Space</h1>
 
                 <div className="metric-selector">
                     <div className="metric-dropdown-wrapper">
